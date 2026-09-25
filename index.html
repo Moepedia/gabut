@@ -22,27 +22,58 @@
   canvas#scene{position:fixed; inset:0; display:block;}
 
   .hud{position:fixed; inset:0; pointer-events:none; z-index:10;}
+
+  /* ---------- NAVBAR ---------- */
+  .navbar{
+    position:absolute; top:0; left:0; right:0; z-index:20; pointer-events:auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:calc(16px + env(safe-area-inset-top,0px)) 6vw 14px;
+    opacity:0; animation:rise 1.2s .2s ease forwards;
+  }
+  .brand{font-family:'IBM Plex Mono',monospace; font-size:.72rem; letter-spacing:.16em; color:var(--mist); text-transform:uppercase;}
+  .brand b{color:var(--white); font-weight:500;}
+  .nav-center{
+    display:flex; gap:2px; background:var(--panel); border:1px solid var(--line);
+    backdrop-filter:blur(14px); padding:4px; border-radius:999px;
+  }
+  .nav-center button{
+    font-family:'IBM Plex Mono',monospace; font-size:.6rem; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--mist); background:none; border:none; padding:7px 13px; border-radius:999px; cursor:pointer; transition:.15s;
+  }
+  .nav-center button.active{background:rgba(87,217,255,.14); color:var(--cyan);}
+  .nav-center button:hover{color:var(--white);}
+  .nav-right{display:flex; align-items:center; gap:10px;}
+  .avatar{width:34px; height:34px; border-radius:50%; overflow:hidden; border:1px solid var(--line); flex:none;}
+  .avatar canvas{width:100%; height:100%; display:block;}
+  .social-btn{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--panel);
+    display:grid; place-items:center; color:var(--mist); cursor:pointer; transition:color .15s,border-color .15s;
+  }
+  .social-btn:hover{color:var(--white); border-color:var(--cyan);}
+  @media (max-width:640px){ .nav-center{display:none;} }
+
   .lockup{
-    position:absolute; top:calc(6vh + env(safe-area-inset-top,0px)); left:6vw; max-width:420px;
-    opacity:0; transform:translateY(14px); animation:rise 1.4s .5s ease forwards;
+    position:absolute; top:calc(13vh + env(safe-area-inset-top,0px)); left:6vw; max-width:420px;
+    opacity:0; transform:translateY(14px); animation:rise 1.4s .5s ease forwards; transition:opacity .3s;
   }
   .lockup h1{font-size:clamp(2rem,4.4vw,3.4rem); font-weight:600; line-height:1.04; letter-spacing:-.01em;}
   .lockup p{margin-top:14px; font-size:.95rem; line-height:1.6; color:var(--mist); max-width:34ch;}
   @keyframes rise{to{opacity:1; transform:translateY(0);}}
 
   .coords{
-    position:absolute; top:calc(6vh + env(safe-area-inset-top,0px)); right:6vw; text-align:right;
+    position:absolute; top:calc(13vh + env(safe-area-inset-top,0px)); right:6vw; text-align:right;
     font-family:'IBM Plex Mono',monospace; font-size:.72rem; color:var(--mist); letter-spacing:.02em;
-    opacity:0; animation:rise 1.4s .9s ease forwards;
+    opacity:0; animation:rise 1.4s .9s ease forwards; transition:opacity .3s;
   }
   .coords div{margin-bottom:4px;}
   .coords b{color:var(--cyan); font-weight:500;}
+  body.hide-hud .lockup, body.hide-hud .coords{opacity:0 !important; pointer-events:none;}
 
   .bracket{position:absolute; width:26px; height:26px; border-color:var(--line);}
-  .bracket.tl{top:calc(2.6vh + env(safe-area-inset-top,0px)); left:2.6vw; border-top:1px solid; border-left:1px solid;}
+  .bracket.tl{top:calc(9.6vh + env(safe-area-inset-top,0px)); left:2.6vw; border-top:1px solid; border-left:1px solid;}
   .bracket.br{bottom:calc(2.6vh + env(safe-area-inset-bottom,0px)); right:2.6vw; border-bottom:1px solid; border-right:1px solid;}
 
-  /* player console */
+  /* ---------- PLAYER CONSOLE ---------- */
   .console{
     position:absolute; left:50%; bottom:calc(3.4vh + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
     width:min(560px,88vw); pointer-events:auto;
@@ -67,6 +98,12 @@
   .meta .t{font-size:.92rem; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .meta .a{font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--mist); margin-top:2px;}
   @keyframes spin{to{transform:rotate(360deg);}}
+
+  #minBtn{
+    flex:none; width:26px; height:26px; border-radius:50%; border:1px solid var(--line); background:none;
+    color:var(--mist); cursor:pointer; display:grid; place-items:center;
+  }
+  #minBtn:hover{color:var(--white); border-color:var(--cyan);}
 
   .bar-wrap{margin-top:12px;}
   .seek{-webkit-appearance:none; width:100%; height:2px; background:var(--line); outline:none; cursor:pointer;}
@@ -95,6 +132,19 @@
   .qrow:hover{color:var(--white);}
   .qrow.active{color:var(--cyan);}
 
+  /* ---------- MINI / COLLAPSED PLAYER ---------- */
+  .mini-player{
+    position:absolute; left:50%; bottom:calc(3.4vh + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
+    display:none; align-items:center; gap:10px; pointer-events:auto; cursor:pointer;
+    background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(18px);
+    border-radius:999px; padding:7px 18px 7px 7px;
+  }
+  .mini-player .disc{width:28px; height:28px;}
+  .mini-player .mt{font-family:'IBM Plex Mono',monospace; font-size:.66rem; color:var(--mist); max-width:38vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .mini-player button{background:none; border:none; color:var(--white); display:grid; place-items:center;}
+  body.player-collapsed .console{display:none;}
+  body.player-collapsed .mini-player{display:flex;}
+
   .note{
     position:absolute; bottom:calc(3.4vh + env(safe-area-inset-bottom,0px)); left:6vw; max-width:220px;
     font-family:'IBM Plex Mono',monospace; font-size:.66rem; line-height:1.6; color:var(--mist); opacity:0;
@@ -102,8 +152,16 @@
   }
   @media (min-width:900px){ .note{display:block;} }
 
+  .toast{
+    position:absolute; top:calc(76px + env(safe-area-inset-top,0px)); right:6vw; z-index:30;
+    background:var(--panel); border:1px solid var(--line); backdrop-filter:blur(14px);
+    padding:9px 16px; font-family:'IBM Plex Mono',monospace; font-size:.68rem; color:var(--white);
+    border-radius:999px; opacity:0; transform:translateY(-6px); pointer-events:none; transition:opacity .25s,transform .25s;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+
   @media (prefers-reduced-motion: reduce){
-    .lockup,.coords,.console,.note{animation:none; opacity:1; transform:none;}
+    .lockup,.coords,.console,.note,.navbar{animation:none; opacity:1; transform:none;}
     .disc{animation:none;}
   }
 </style>
@@ -113,6 +171,24 @@
 <canvas id="scene"></canvas>
 
 <div class="hud">
+  <div class="navbar">
+    <div class="brand">◍ <b>SINGULARITY</b></div>
+    <div class="nav-center">
+      <button id="navOrbit" class="active" type="button">Orbit</button>
+      <button id="navHud" class="active" type="button">Info</button>
+      <button id="navMute" type="button">Sound</button>
+    </div>
+    <div class="nav-right">
+      <div class="avatar"><canvas id="avatarCanvas" width="68" height="68"></canvas></div>
+      <button class="social-btn" id="igBtn" type="button" aria-label="Instagram @redenoirr" title="Instagram · @redenoirr">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+      </button>
+      <button class="social-btn" id="dcBtn" type="button" aria-label="Discord rexnh_" title="Discord · rexnh_">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="6" width="18" height="12" rx="5"/><circle cx="9" cy="12" r="1.2" fill="currentColor"/><circle cx="15" cy="12" r="1.2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+
   <div class="bracket tl"></div>
   <div class="bracket br"></div>
 
@@ -128,14 +204,18 @@
   </div>
 
   <div class="note">Drag to orbit · scroll to approach the horizon</div>
+  <div class="toast" id="toast"></div>
 
-  <div class="console">
+  <div class="console" id="console">
     <div class="track-row">
       <div class="disc" id="disc"><span></span></div>
       <div class="meta">
         <div class="t" id="ttitle">—</div>
         <div class="a" id="tartist">no signal loaded</div>
       </div>
+      <button id="minBtn" aria-label="Minimize player" title="Hide player">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M6 10l6 6 6-6z"/></svg>
+      </button>
     </div>
 
     <div class="bar-wrap">
@@ -167,6 +247,14 @@
 
     <div class="queue" id="queue"></div>
   </div>
+
+  <div class="mini-player" id="miniPlayer">
+    <div class="disc" id="miniDisc"><span></span></div>
+    <div class="mt" id="miniTitle">—</div>
+    <button id="miniPlayBtn" aria-label="Play/pause">
+      <svg id="miniPlayIcon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -192,7 +280,6 @@ function updateCam(){
 }
 updateCam();
 
-// soft round sprite, generated (no external image)
 function makeSprite(){
   const c = document.createElement('canvas'); c.width=c.height=64;
   const ctx = c.getContext('2d');
@@ -205,7 +292,6 @@ function makeSprite(){
 }
 const spriteTex = makeSprite();
 
-// starfield
 const starGeo = new THREE.BufferGeometry();
 const starCount = 2400;
 const starPos = new Float32Array(starCount*3);
@@ -220,21 +306,18 @@ starGeo.setAttribute('position', new THREE.BufferAttribute(starPos,3));
 const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({size:.14, map:spriteTex, transparent:true, opacity:.6, depthWrite:false}));
 scene.add(stars);
 
-// event horizon
 const horizon = new THREE.Mesh(new THREE.SphereGeometry(1.5,48,48), new THREE.MeshBasicMaterial({color:0x000000}));
 scene.add(horizon);
 
-// photon ring glow
 const ringGlow = new THREE.Sprite(new THREE.SpriteMaterial({map:spriteTex, color:0xfff2df, transparent:true, opacity:.9, blending:THREE.AdditiveBlending, depthWrite:false}));
 ringGlow.scale.set(4.4,4.4,1);
 scene.add(ringGlow);
 
-// accretion disk particles (differential rotation, redshift/blueshift color)
 const diskCount = 9000;
 const diskGeo = new THREE.BufferGeometry();
 const diskPos = new Float32Array(diskCount*3);
 const diskCol = new Float32Array(diskCount*3);
-const diskData = []; // {r, a, speed}
+const diskData = [];
 const cEmber = new THREE.Color(0xff7a3d), cCyan = new THREE.Color(0x57d9ff), cHot = new THREE.Color(0xfff4e0);
 for(let i=0;i<diskCount;i++){
   const r = 2.1 + Math.pow(Math.random(),1.7)*7.5;
@@ -243,7 +326,7 @@ for(let i=0;i<diskCount;i++){
   diskData.push({r,a,speed});
   const x = Math.cos(a)*r, z = Math.sin(a)*r, y = (Math.random()-0.5)*0.35*(1/Math.sqrt(r));
   diskPos[i*3]=x; diskPos[i*3+1]=y; diskPos[i*3+2]=z;
-  const side = Math.sin(a)*0.5+0.5; // blue on one side, ember on the other = doppler beaming
+  const side = Math.sin(a)*0.5+0.5;
   const base = r<3.2 ? cHot : (side>0.5?cCyan:cEmber);
   const col = base.clone().lerp(cHot, Math.max(0,1-(r-2.1)/2.5));
   diskCol[i*3]=col.r; diskCol[i*3+1]=col.g; diskCol[i*3+2]=col.b;
@@ -253,9 +336,8 @@ diskGeo.setAttribute('color', new THREE.BufferAttribute(diskCol,3));
 const disk = new THREE.Points(diskGeo, new THREE.PointsMaterial({size:.09, map:spriteTex, vertexColors:true, transparent:true, opacity:.95, blending:THREE.AdditiveBlending, depthWrite:false}));
 scene.add(disk);
 
-// interaction: drag orbit, wheel zoom
 let dragging=false, lastX=0, lastY=0, autoSpin=true;
-canvas.addEventListener('pointerdown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY; autoSpin=false;});
+canvas.addEventListener('pointerdown', e=>{dragging=true; lastX=e.clientX; lastY=e.clientY;});
 addEventListener('pointerup', ()=>dragging=false);
 addEventListener('pointermove', e=>{
   if(!dragging) return;
@@ -276,7 +358,6 @@ function animate(now){
   const dt = Math.min(0.05,(now-t0)/1000); t0=now;
   if(autoSpin) phi += dt*0.035;
   updateCam();
-
   for(let i=0;i<diskCount;i++){
     const d = diskData[i];
     d.a += d.speed*dt*0.6;
@@ -284,17 +365,51 @@ function animate(now){
     posAttr.array[i*3+2] = Math.sin(d.a)*d.r;
   }
   posAttr.needsUpdate = true;
-  disk.rotation.y += 0;
   stars.rotation.y += dt*0.003;
   ringGlow.material.opacity = 0.75 + Math.sin(now*0.001)*0.1;
-
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 requestAnimationFrame(animate);
 
-/* ---------- MUSIC PLAYER ---------- */
-// Demo playlist (swap these for your own hosted tracks or a streaming API — see notes below).
+/* ---------- NAVBAR: social, avatar, hud toggles ---------- */
+// Instagram/Discord profile pictures can't be fetched live from a published page
+// (no external images/APIs are reachable here), so this draws a themed placeholder
+// avatar instead. The icons link out to your real profiles.
+const av = document.getElementById('avatarCanvas').getContext('2d');
+const ag = av.createLinearGradient(0,0,68,68);
+ag.addColorStop(0,'#ff7a3d'); ag.addColorStop(1,'#57d9ff');
+av.fillStyle = ag; av.fillRect(0,0,68,68);
+av.fillStyle = 'rgba(5,5,10,.35)'; av.fillRect(0,0,68,68);
+av.fillStyle = '#fdf6ec'; av.font = '600 30px Space Grotesk, sans-serif';
+av.textAlign = 'center'; av.textBaseline = 'middle';
+av.fillText('R', 34, 37);
+
+const toastEl = document.getElementById('toast');
+let toastTimer;
+function toast(msg){
+  toastEl.textContent = msg; toastEl.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>toastEl.classList.remove('show'), 2200);
+}
+document.getElementById('igBtn').onclick = ()=> window.open('https://instagram.com/redenoirr','_blank','noopener');
+document.getElementById('dcBtn').onclick = ()=>{
+  navigator.clipboard?.writeText('rexnh_').catch(()=>{});
+  toast('Discord rexnh_ disalin!');
+};
+
+const navOrbit = document.getElementById('navOrbit');
+navOrbit.onclick = ()=>{ autoSpin = !autoSpin; navOrbit.classList.toggle('active', autoSpin); };
+const navHud = document.getElementById('navHud');
+navHud.onclick = ()=>{ document.body.classList.toggle('hide-hud'); navHud.classList.toggle('active'); };
+const navMute = document.getElementById('navMute');
+navMute.onclick = ()=>{
+  audio.muted = !audio.muted;
+  navMute.classList.toggle('active', audio.muted);
+  navMute.textContent = audio.muted ? 'Muted' : 'Sound';
+};
+
+/* ---------- MUSIC PLAYER (plays in background regardless of panel visibility) ---------- */
 const defaultPlaylist = [
   {title:'Transmission I', artist:'ambient · demo', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'},
   {title:'Transmission II', artist:'ambient · demo', src:'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'},
@@ -309,6 +424,8 @@ const playBtn=document.getElementById('playBtn'), playIcon=document.getElementBy
 const disc=document.getElementById('disc'), ttitle=document.getElementById('ttitle'), tartist=document.getElementById('tartist');
 const seek=document.getElementById('seek'), tcur=document.getElementById('tcur'), tdur=document.getElementById('tdur');
 const queueEl=document.getElementById('queue');
+const miniDisc=document.getElementById('miniDisc'), miniTitle=document.getElementById('miniTitle');
+const miniPlayIcon=document.getElementById('miniPlayIcon');
 
 const fmt = s => { if(!isFinite(s)) return '0:00'; const m=Math.floor(s/60), r=Math.floor(s%60); return `${m}:${r<10?'0':''}${r}`; };
 const ICON_PLAY='<path d="M8 5v14l11-7z"/>', ICON_PAUSE='<path d="M6 5h4v14H6zm8 0h4v14h-4z"/>';
@@ -322,13 +439,27 @@ function load(i, autoplay){
   const t = playlist[idx];
   audio.src = t.src;
   ttitle.textContent = t.title; tartist.textContent = t.artist;
+  miniTitle.textContent = t.title;
+  if ('mediaSession' in navigator){
+    navigator.mediaSession.metadata = new MediaMetadata({title:t.title, artist:t.artist, album:'Singularity'});
+  }
   renderQueue();
   if(autoplay) play();
 }
-function play(){ audio.play().then(()=>{ playIcon.innerHTML=ICON_PAUSE; disc.classList.add('playing'); }).catch(()=>{ tartist.textContent='signal lost — try “+ add track” to use local audio'; }); }
-function pause(){ audio.pause(); playIcon.innerHTML=ICON_PLAY; disc.classList.remove('playing'); }
+function play(){
+  audio.play().then(()=>{
+    playIcon.innerHTML=ICON_PAUSE; miniPlayIcon.innerHTML=ICON_PAUSE;
+    disc.classList.add('playing'); miniDisc.classList.add('playing');
+  }).catch(()=>{ tartist.textContent='signal lost — try “+ add track” to use local audio'; });
+}
+function pause(){
+  audio.pause();
+  playIcon.innerHTML=ICON_PLAY; miniPlayIcon.innerHTML=ICON_PLAY;
+  disc.classList.remove('playing'); miniDisc.classList.remove('playing');
+}
 
 playBtn.onclick = ()=> audio.paused ? play() : pause();
+document.getElementById('miniPlayBtn').onclick = (e)=>{ e.stopPropagation(); audio.paused ? play() : pause(); };
 document.getElementById('prevBtn').onclick = ()=> load(idx-1, true);
 document.getElementById('nextBtn').onclick = ()=> load(idx+1, true);
 audio.addEventListener('ended', ()=> load(idx+1, true));
@@ -336,6 +467,20 @@ audio.addEventListener('timeupdate', ()=>{ if(!audio.duration) return; seek.valu
 seek.addEventListener('input', ()=>{ if(audio.duration) audio.currentTime = (seek.value/100)*audio.duration; });
 document.getElementById('vol').addEventListener('input', e=> audio.volume = +e.target.value);
 document.getElementById('toggleQueue').onclick = ()=> queueEl.classList.toggle('open');
+
+// hide/show player — audio element itself is untouched, so playback continues in the background
+document.getElementById('minBtn').onclick = ()=> document.body.classList.add('player-collapsed');
+document.getElementById('miniPlayer').addEventListener('click', (e)=>{
+  if(e.target.closest('#miniPlayBtn')) return;
+  document.body.classList.remove('player-collapsed');
+});
+
+if ('mediaSession' in navigator){
+  navigator.mediaSession.setActionHandler('play', play);
+  navigator.mediaSession.setActionHandler('pause', pause);
+  navigator.mediaSession.setActionHandler('previoustrack', ()=>load(idx-1,true));
+  navigator.mediaSession.setActionHandler('nexttrack', ()=>load(idx+1,true));
+}
 
 document.getElementById('fileInput').addEventListener('change', e=>{
   const files = [...e.target.files];
